@@ -1,0 +1,44 @@
+package com.college.event_portal.controller;
+
+import com.college.event_portal.model.User;
+import com.college.event_portal.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import jakarta.servlet.http.HttpSession;
+
+@Controller
+public class PostLoginController {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping("/postLogin")
+    public String postLogin(Authentication authentication, HttpSession session) {
+        // Get logged in user's email
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+
+        // Load full User from DB
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user != null) {
+            // store in session
+            session.setAttribute("currentUser", user);
+
+            // redirect based on role
+            if (user.getRole().equals("ROLE_FACULTY")) {
+                return "redirect:/faculty/dashboard";
+            } else if (user.getRole().equals("ROLE_STUDENT")) {
+                return "redirect:/student/dashboard";
+            } else if (user.getRole().equals("ROLE_ADMIN")) {
+                return "redirect:/admin/dashboard";
+            }
+        }
+
+        return "redirect:/login?error"; // fallback
+    }
+}

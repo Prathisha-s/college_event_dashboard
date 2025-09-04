@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">🎓 College Event Portal</a>
+            <div class="d-flex align-items-center">
+
+                <!-- If user is logged in, show welcome + logout -->
+                <div sec:authorize="isAuthenticated()" class="me-3 text-light">
+                    Welcome, <span th:text="${name}">User</span> 🎉 
+                    | Role: <span th:text="${role}">STUDENT</span>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn btn-sm btn-danger">Logout</button>
+                    </form>
+                </div>
+
+                <!-- If user is NOT logged in, show login/register -->
+                <div sec:authorize="!isAuthenticated()">
+                    <a class="btn btn-sm me-2"
+                       th:classappend="${activePage == 'login'} ? 'btn-light text-dark' : 'btn-outline-light text-light'"
+                       th:href="@{/login}">Login</a>
+
+                    <a class="btn btn-sm"
+                       th:classappend="${activePage == 'register'} ? 'btn-dark text-light' : 'btn-warning text-dark'"
+                       th:href="@{/register}">Register</a>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+</div>
+</body>
+</html>

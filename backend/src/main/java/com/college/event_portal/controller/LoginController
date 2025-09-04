@@ -1,0 +1,26 @@
+@Autowired
+private PasswordEncoder passwordEncoder;
+
+@PostMapping("/login")
+public String loginUser(@RequestParam String email,
+                        @RequestParam String password,
+                        HttpSession session,
+                        Model model) {
+
+    User user = userRepository.findByEmail(email.trim()).orElse(null); // trim to avoid spaces
+
+    if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+        session.setAttribute("currentUser", user);
+        session.setAttribute("name", user.getName());
+        session.setAttribute("role", user.getRole());
+
+        switch (user.getRole()) {
+            case "ROLE_FACULTY": return "redirect:/faculty/dashboard";
+            case "ROLE_STUDENT": return "redirect:/student/dashboard";
+            case "ROLE_ADMIN": return "redirect:/admin/dashboard";
+        }
+    }
+
+    model.addAttribute("error", "Invalid email or password");
+    return "login";
+}

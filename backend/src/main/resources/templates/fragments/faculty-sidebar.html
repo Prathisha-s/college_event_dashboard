@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h4 {
+            margin-bottom: 20px;
+        }
+        .nav-link {
+            color: white;
+            padding: 5px 0;
+            display: block;
+            text-decoration: none;
+        }
+        .nav-link:hover {
+            color: #ffc107;
+        }
+        .active {
+            font-weight: bold;
+            color: #ffc107;
+        }
+        .user-info {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div th:fragment="sidebar">
+        <h4>Faculty Dashboard</h4>
+        <div class="user-info">
+            👤 <span th:text="${name}">Name</span><br>
+            🎓 <span th:text="${role}">Role</span>
+        </div>
+        <hr>
+        <ul class="nav flex-column">
+            <li><a th:href="@{/faculty/dashboard}" th:classappend="${currentPage=='dashboard'} ? 'active' : ''" class="nav-link">🏠 Home</a></li>
+            <li><a th:href="@{/faculty/create-event}" th:classappend="${currentPage=='create-event'} ? 'active' : ''" class="nav-link">➕ Create Event</a></li>
+            <li><a th:href="@{/faculty/manage-events}" th:classappend="${currentPage=='manage-events'} ? 'active' : ''" class="nav-link">🗂 Manage Events</a></li>
+            <li><a th:href="@{/faculty/notifications}" th:classappend="${currentPage=='notifications'} ? 'active' : ''" class="nav-link">🔔 Notifications</a></li>
+            <li><a th:href="@{/logout}" class="nav-link">🚪 Logout</a></li>
+        </ul>
+    </div>
+</body>
+</html>

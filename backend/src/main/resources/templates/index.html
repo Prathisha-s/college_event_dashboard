@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Portal - Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            flex-wrap: wrap; /* mobile-friendly */
+        }
+        nav .left {
+            font-size: 16px;
+        }
+        nav .right a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            font-weight: bold;
+        }
+        nav .right a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="left">
+            Welcome, <span th:text="${name}">User</span> 🎉  
+            | Role: <span th:text="${role}">GUEST</span>
+        </div>
+        <div class="right">
+            <a th:href="@{/logout}">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Page content -->
+    <div class="content">
+        <h1>Event Portal</h1>
+        <p>Explore and manage events easily!</p>
+    </div>
+</body>
+</html>
