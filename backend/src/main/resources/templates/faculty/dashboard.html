@@ -5,82 +5,156 @@
     <title>Faculty Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #f9f9f9; font-family: Arial, sans-serif; }
-        .sidebar { height: 100vh; background-color: #343a40; color: white; padding: 20px; }
-        .sidebar a { color: white; text-decoration: none; display: block; margin: 10px 0; }
-        .content { padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
-        table, th, td { border: 1px solid #ddd; }
-        th, td { padding: 10px; text-align: left; }
-        th { background: #0066cc; color: #fff; }
-        td button { background: #0066cc; color: white; border: none; padding: 5px 10px; cursor: pointer; }
-        td button:hover { background: #004999; }
-        .no-events { margin-top: 20px; color: #555; font-style: italic; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #edf2f7; margin:0; }
+
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            width: 240px;
+            position: fixed;
+            background-color: #2d3748;
+            color: #edf2f7;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h4 { margin-bottom: 20px; font-weight: 600; font-size: 1.3rem; }
+        .sidebar .user-info { margin-bottom: 20px; font-size: 0.95rem; line-height: 1.6; }
+        .sidebar a {
+            color: #edf2f7;
+            display: block;
+            margin: 8px 0;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .sidebar a.active, .sidebar a:hover { background: #4a5568; color: #f6e05e; font-weight: 600; }
+
+        /* Main content */
+        .content {
+            margin-left: 260px;
+            padding: 30px;
+            background: #f7fafc;
+            min-height: 100vh;
+        }
+        .content h2 { font-weight: 600; margin-bottom: 25px; }
+
+        /* Event Cards */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .event-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        .event-card h5 { margin-top: 0; font-size: 1.25rem; color: #2d3748; }
+        .event-details p { margin: 5px 0; color: #4a5568; font-size: 0.95rem; }
+        .event-details strong { color: #2d3748; }
+
+        /* Buttons */
+        .event-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .event-actions a, .event-actions form button {
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .event-actions a.btn-secondary {
+            background: #718096;
+            color: #fff;
+        }
+        .event-actions a.btn-secondary:hover { background: #4a5568; }
+        .event-actions button.btn-danger {
+            background: #e53e3e;
+            color: #fff;
+            border: none;
+        }
+        .event-actions button.btn-danger:hover { background: #c53030; }
+
+        /* No events message */
+        .no-events {
+            text-align: center;
+            margin-top: 60px;
+            font-style: italic;
+            color: #718096;
+            font-size: 1.1rem;
+        }
+        .no-events a {
+            color: #3182ce;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .no-events a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 sidebar">
-            <h4>Faculty Dashboard</h4>
-            <p>👤 <span th:text="${name}">Name</span><br>🎓 <span th:text="${role}">Role</span></p>
-            <hr>
-            <a th:href="@{/faculty/dashboard}">🏠 Home</a>
-            <a th:href="@{/faculty/create-event}">➕ Create Event</a>
-            <a th:href="@{/faculty/manage-events}">🗂 Manage Events</a>
-            <a th:href="@{/faculty/notifications}">🔔 Notifications</a>
-            <a th:href="@{/logout}">🚪 Logout</a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h4>Faculty Dashboard</h4>
+        <div class="user-info">
+            👤 <span th:text="${name}">Name</span><br>
+            🎓 <span th:text="${role}">Role</span>
+        </div>
+        <a th:href="@{/faculty/dashboard}" th:classappend="${currentPage=='dashboard'} ? ' active' : ''">🏠 Home</a>
+        <a th:href="@{/faculty/create-event}" th:classappend="${currentPage=='create-event'} ? ' active' : ''">➕ Create Event</a>
+        <a th:href="@{/faculty/manage-events}" th:classappend="${currentPage=='manage-events'} ? ' active' : ''">🗂 Manage Events</a>
+        <a th:href="@{/faculty/notifications}" th:classappend="${currentPage=='notifications'} ? ' active' : ''">🔔 Notifications</a>
+        <a th:href="@{/faculty/expired-events}" th:classappend="${currentPage=='expired-events'} ? ' active' : ''">📅 Expired Events</a>
+        <a th:href="@{/logout}">🚪 Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2>🏠 Welcome, <span th:text="${name}">Faculty</span></h2>
+        <p>Here are your current active events:</p>
+
+        <!-- No active events -->
+        <div th:if="${#lists.isEmpty(events)}" class="no-events">
+            You have no current active events. ➕ <a th:href="@{/faculty/create-event}">Create a new event</a>
         </div>
 
-        <!-- Main Content -->
-        <div class="col-md-9 content">
-            <h2>Welcome, <span th:text="${name}">Faculty</span> 🎉</h2>
-            <p>This is your faculty dashboard. You can manage your events and view registrations.</p>
-
-            <h3>Your Events:</h3>
-            <div th:if="${#lists.isEmpty(events)}" class="no-events">You have not created any events yet.</div>
-
-            <table th:if="${!#lists.isEmpty(events)}">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Venue</th>
-                    <th>Email</th>
-                    <th>Hosted By</th>
-                    <th>Sponsor</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="event : ${events}">
-                    <td th:text="${event.name}">Event Name</td>
-                    <td th:text="${event.description}">Description</td>
-                    <td th:text="${event.date}">Date</td>
-                    <td>
-                        <span th:text="${event.startTime}">Start Time</span>
-                        <span th:text="${event.startAmPm}">AM/PM</span> -
-                        <span th:text="${event.endTime}">End Time</span>
-                        <span th:text="${event.endAmPm}">AM/PM</span>
-                    </td>
-                    <td th:text="${event.venue}">Venue</td>
-                    <td th:text="${event.email}">Email</td>
-                    <td th:text="${event.hostedBy}">Hosted By</td>
-                    <td th:text="${event.sponsor}">Sponsor</td>
-                    <td>
-                        <form th:action="@{'/faculty/delete-event/' + ${event.id}}" method="post" style="display:inline;">
-                            <button type="submit">Delete</button>
-                        </form>
-                        <a th:href="@{'/faculty/registrations/' + ${event.id}}">View Registrations</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <!-- Active events grid -->
+        <div th:if="${!#lists.isEmpty(events)}" class="events-grid">
+            <div th:each="event : ${events}" class="event-card">
+                <h5 th:text="${event.name}">Event Name</h5>
+                <div class="event-details">
+                    <p th:text="${event.description}">Event Description</p>
+                    <p><strong>Date:</strong> <span th:text="${event.date}">DD-MM-YYYY</span></p>
+                    <p>
+                        <strong>Time:</strong>
+                        <span th:text="${event.startTime}"></span> 
+                        <span th:text="${event.startAmPm}"></span> - 
+                        <span th:text="${event.endTime}"></span> 
+                        <span th:text="${event.endAmPm}"></span>
+                    </p>
+                    <p><strong>Venue:</strong> <span th:text="${event.venue}"></span></p>
+                    <p><strong>Email:</strong> <span th:text="${event.email}"></span></p>
+                    <p><strong>Hosted By:</strong> <span th:text="${event.hostedBy}"></span></p>
+                    <p><strong>Sponsor:</strong> <span th:text="${event.sponsor}"></span></p>
+                </div>
+                <div class="event-actions">
+                    <form th:action="@{'/faculty/delete-event/' + ${event.id}}" method="post">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <a th:href="@{'/faculty/registrations/' + ${event.id}}" class="btn btn-secondary">View Registrations</a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>

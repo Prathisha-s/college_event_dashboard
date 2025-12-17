@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!-- Sidebar Fragment -->
+<div th:fragment="sidebar(name)">
+    <div class="sidebar">
+        <h4>Admin Panel</h4>
+        <p>👑 <span th:text="${name}">Admin</span></p>
+        <hr>
+        <a th:href="@{/admin/dashboard}">🏠 Dashboard</a>
+        <a th:href="@{/admin/events}">📋 Manage Events</a>
+        <a th:href="@{/admin/registrations}">📝 Registrations</a>
+        <a th:href="@{/admin/notifications}">📢 Notifications</a>
+        <a th:href="@{/admin/users}">👥 Users</a>
+        <a th:href="@{/logout}">🚪 Logout</a>
+    </div>
+</div>
+</body>
+</html>

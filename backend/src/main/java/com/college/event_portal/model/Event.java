@@ -5,29 +5,56 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
+@Table(name = "events")
 public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
-    private String description;
-    private LocalDate date;
-    private String venue;
 
+    @Column(length = 1000)
+    private String description;
+
+    @Column(nullable = false)
+    private LocalDate date;
+
+    private String venue;
     private String email;
     private String hostedBy;
     private String sponsor;
+
     private LocalTime startTime;
-    private String startAmPm;
     private LocalTime endTime;
-    private String endAmPm;
+
     private String category;
 
-    @ManyToOne
-    private User faculty; // Link to faculty creating the event
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "faculty_id")
+    private User faculty;
 
-    // Getters & Setters
+    @Transient
+    private Integer startHour;
+    @Transient
+    private String startMinute;
+    @Transient
+    private String startAmPm;
+    @Transient
+    private Integer endHour;
+    @Transient
+    private String endMinute;
+    @Transient
+    private String endAmPm;
+
+    // Transient field for registration count
+    @Transient
+    private int registrationCount;
+
+    public Event() {}
+
+    // --- Getters and Setters ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -55,18 +82,34 @@ public class Event {
     public LocalTime getStartTime() { return startTime; }
     public void setStartTime(LocalTime startTime) { this.startTime = startTime; }
 
-    public String getStartAmPm() { return startAmPm; }
-    public void setStartAmPm(String startAmPm) { this.startAmPm = startAmPm; }
-
     public LocalTime getEndTime() { return endTime; }
     public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
-
-    public String getEndAmPm() { return endAmPm; }
-    public void setEndAmPm(String endAmPm) { this.endAmPm = endAmPm; }
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
 
     public User getFaculty() { return faculty; }
     public void setFaculty(User faculty) { this.faculty = faculty; }
+
+    public Integer getStartHour() { return startHour; }
+    public void setStartHour(Integer startHour) { this.startHour = startHour; }
+
+    public String getStartMinute() { return startMinute; }
+    public void setStartMinute(String startMinute) { this.startMinute = startMinute; }
+
+    public String getStartAmPm() { return startAmPm; }
+    public void setStartAmPm(String startAmPm) { this.startAmPm = startAmPm; }
+
+    public Integer getEndHour() { return endHour; }
+    public void setEndHour(Integer endHour) { this.endHour = endHour; }
+
+    public String getEndMinute() { return endMinute; }
+    public void setEndMinute(String endMinute) { this.endMinute = endMinute; }
+
+    public String getEndAmPm() { return endAmPm; }
+    public void setEndAmPm(String endAmPm) { this.endAmPm = endAmPm; }
+
+    public int getRegistrationCount() { return registrationCount; }
+    public void setRegistrationCount(int registrationCount) { this.registrationCount = registrationCount; }
 }
+    

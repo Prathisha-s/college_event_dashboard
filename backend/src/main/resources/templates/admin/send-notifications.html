@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Send Notifications</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="fragments :: sidebar(${name})"></div>
+<div class="content container mt-3">
+    <h2>Send Notification</h2>
+    <form th:action="@{/admin/notifications/send}" method="post">
+        <div class="mb-2">
+            <label>Select Event:</label>
+            <select name="eventId" class="form-select" required>
+                <option th:each="event : ${events}" th:value="${event.id}" th:text="${event.name}"></option>
+            </select>
+        </div>
+        <div class="mb-2">
+            <label>Message:</label>
+            <textarea name="message" class="form-control" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Send Notification</button>
+    </form>
+</div>
+</body>
+</html>

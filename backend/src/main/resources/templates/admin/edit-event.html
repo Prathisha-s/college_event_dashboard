@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Event</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f8; margin:0; }
+        .sidebar { height: 100vh; background: #343a40; color: #fff; padding: 20px; position: fixed; width: 220px; }
+        .sidebar h4 { margin-bottom: 20px; }
+        .sidebar a { color: #fff; display: block; margin: 12px 0; text-decoration: none; transition: color 0.3s; }
+        .sidebar a:hover { color: #ffc107; }
+        .content { margin-left: 240px; padding: 20px; }
+        .form-container { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        @media(max-width: 768px) {
+            .sidebar { position: relative; width: 100%; height: auto; }
+            .content { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h4>Admin Panel</h4>
+    <p>👑 <span th:text="${name}">Admin</span></p>
+    <hr>
+    <a th:href="@{/admin/dashboard}">🏠 Dashboard</a>
+    <a th:href="@{/admin/events}">📋 Manage Events</a>
+    <a th:href="@{/admin/registrations}">📝 Registrations</a>
+    <a th:href="@{/logout}">🚪 Logout</a>
+</div>
+
+<div class="content">
+    <h2>Edit Event ✏️</h2>
+    <div class="form-container mt-3">
+        <form th:action="@{/admin/events/edit/{id}(id=${event.id})}" th:object="${event}" method="post">
+            <div class="mb-3">
+                <label for="name" class="form-label">Event Title</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" th:field="*{description}" rows="4" required></textarea>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label for="date" class="form-label">Event Date</label>
+                    <input type="date" class="form-control" id="date" th:field="*{date}" required>
+                </div>
+
+                <!-- Start Time -->
+                <div class="mb-3 col-md-4">
+                    <label class="form-label">Start Time</label>
+                    <div class="d-flex gap-2">
+                        <select class="form-select" th:field="*{startHour}" required>
+                            <option th:each="h : ${#numbers.sequence(1,12)}" th:value="${h}" th:text="${h}">1</option>
+                        </select>
+                        <select class="form-select" th:field="*{startMinute}" required>
+                            <option th:each="m : ${#numbers.sequence(0,59)}"
+                                    th:value="${m < 10 ? '0'+m : m}" th:text="${m < 10 ? '0'+m : m}">00</option>
+                        </select>
+                        <select class="form-select" th:field="*{startAmPm}" required>
+                            <option value="AM" th:selected="${event.startAmPm == 'AM'}">AM</option>
+                            <option value="PM" th:selected="${event.startAmPm == 'PM'}">PM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- End Time -->
+                <div class="mb-3 col-md-4">
+                    <label class="form-label">End Time</label>
+                    <div class="d-flex gap-2">
+                        <select class="form-select" th:field="*{endHour}" required>
+                            <option th:each="h : ${#numbers.sequence(1,12)}" th:value="${h}" th:text="${h}">1</option>
+                        </select>
+                        <select class="form-select" th:field="*{endMinute}" required>
+                            <option th:each="m : ${#numbers.sequence(0,59)}"
+                                    th:value="${m < 10 ? '0'+m : m}" th:text="${m < 10 ? '0'+m : m}">00</option>
+                        </select>
+                        <select class="form-select" th:field="*{endAmPm}" required>
+                            <option value="AM" th:selected="${event.endAmPm == 'AM'}">AM</option>
+                            <option value="PM" th:selected="${event.endAmPm == 'PM'}">PM</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="venue" class="form-label">Location</label>
+                <input type="text" class="form-control" id="venue" th:field="*{venue}" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update Event</button>
+            <a th:href="@{/admin/events}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
